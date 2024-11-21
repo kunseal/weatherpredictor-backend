@@ -42,7 +42,7 @@ pipeline {
                     }
                 }
             }
-        }
+        
 
         stage('Login to Amazon ECR') {
             steps {
