@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    tools{
+        maven 'maven'
+    }
     environment {
         AWS_REGION = 'us-east-1'              
         ECR_REPO_NAME = 'weather/predictor-backend'          
@@ -14,6 +16,16 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/kunseal/weatherpredictor-backend.git'
+            }
+        }
+        stage('Build Project try 1') {
+            steps {
+                script {
+                        sh """
+                        echo "Running Maven build"
+                        mvn clean install
+                        """
+                }
             }
         }
         stage('Build Project') {
