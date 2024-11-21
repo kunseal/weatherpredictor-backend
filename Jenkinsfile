@@ -16,7 +16,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/kunseal/weatherpredictor-backend.git'
             }
         }
-       stage('Build Project') {
+        stage('Build Project') {
             steps {
                 script {
                         sh """
@@ -39,9 +39,9 @@ pipeline {
                         # Build the Docker image
                         docker build -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG} .
                         """
-                    }
                 }
             }
+        }
         
 
         stage('Login to Amazon ECR') {
