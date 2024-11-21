@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.weatherpredictor.model.WeatherResponse;
 import com.example.weatherpredictor.service.WeatherService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +26,7 @@ public class WeatherController {
     private final WeatherService weatherService;
 
     @GetMapping
-    public ResponseEntity<WeatherResponse> getWeatherForecast(
-            @RequestParam @Pattern(regexp = "^[a-zA-Z ]+$", message = "City name must only contain letters and spaces") String city) {
+    public ResponseEntity<WeatherResponse> getWeatherForecast(@RequestParam @Pattern(regexp = "^[a-zA-Z ]+$", message = "City name must only contain letters and spaces") String city) {
         log.debug("WeatherController::getWeatherForecast");
         WeatherResponse response = weatherService.getWeatherForecast(city);
         return ResponseEntity.ok(response);
