@@ -78,7 +78,7 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 script {
-                    sshagent(credentials: ['ec2-ssh-key']) {
+                    sshagent(credentials: ['LinuxKey']) {
                         sh """
                             # Stop and remove any container using port 8081
                             ssh ${EC2_USER}@${EC2_IP} '
