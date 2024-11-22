@@ -6,7 +6,7 @@ pipeline {
     environment {
         AWS_REGION = 'us-east-1'              
         ECR_REPO_NAME = 'weather/predictor-backend'          
-        IMAGE_TAG = "weather-predictor-latest"                   
+        IMAGE_TAG = "weather-predictor:latest"                   
         EC2_IP = '98.81.214.56' 
         EC2_USER = 'ec2-user'      
         AWS_ACCOUNT_ID = '293359982991'   
