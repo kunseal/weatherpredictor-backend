@@ -6,7 +6,7 @@ pipeline {
     environment {
         AWS_REGION = 'us-east-1'              
         ECR_REPO_NAME = 'weather/predictor-backend'          
-        IMAGE_TAG = "latest"                   
+        IMAGE_TAG = "weather-predictor:latest"                   
         EC2_IP = '98.81.214.56' 
         EC2_USER = 'ec2-user'      
         AWS_ACCOUNT_ID = '293359982991'   
@@ -39,7 +39,7 @@ pipeline {
                         fi
 
                         # Build the Docker image
-                        docker build -t weather/predictor-backend .
+                        docker build -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG} .
                         """
                 }
             }
@@ -68,7 +68,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker tag weather/predictor-backend:${IMAGE_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG}
+                    docker tag ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG}
                     docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG}
                     """
                 }
