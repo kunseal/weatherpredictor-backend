@@ -8,7 +8,7 @@ pipeline {
         ECR_REPO_NAME = 'weather/predictor'          
         IMAGE_TAG = "weather-predictor-latest"                   
         EC2_IP = '98.81.214.56' 
-        EC2_USER = 'ec2-user'      
+        EC2_USER = 'ubuntu'      
         AWS_ACCOUNT_ID = '293359982991'   
     }
 
