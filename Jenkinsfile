@@ -75,35 +75,40 @@ pipeline {
             }
         }
 
-        stage('Deploy to EC2') {
+        stage('Deploy Container') {
             steps {
                 script {
-                    sshagent(credentials: ['cloud-user']) {
-                        sh """
-                            # Stop and remove any container using port 8081
-                            ssh ${EC2_USER}@${EC2_IP} '
-                                container_id=\$(docker ps -q -f "publish=8081")
-                                if [ -n "\$container_id" ]; then
-                                    echo "Stopping and removing container running on port 8081..."
-                                    docker stop \$container_id
-                                    docker rm \$container_id
-                                else
-                                    echo "No container running on port 8081"
-                                fi
-                            '
-                            
-                            # Pull the latest image from ECR
-                            aws configure set aws_access_key_id $AWS_ACCESS_KEY
-                            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-                            aws configure set region $AWS_REGION
-                            aws ecr-public get-login-password --region $AWS_REGION |  ssh ${EC2_USER}@${EC2_IP} 'docker login --username AWS --password-stdin public.ecr.aws/y1y3z0j6'
+                   withCredentials([
+                        string(credentialsId: 'AWS_ACCESS_KEY', variable: 'AWS_ACCESS_KEY'),
+                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
+                    ]) {
+                        sshagent(credentials: ['cloud-user']) {
+                            sh """
+                                # Stop and remove any container using port 8081
+                                ssh ${EC2_USER}@${EC2_IP} '
+                                    container_id=\$(docker ps -q -f "publish=8081")
+                                    if [ -n "\$container_id" ]; then
+                                        echo "Stopping and removing container running on port 8081..."
+                                        docker stop \$container_id
+                                        docker rm \$container_id
+                                    else
+                                        echo "No container running on port 8081"
+                                    fi
+                                '
+                                
+                                # Pull the latest image from ECR
+                                aws configure set aws_access_key_id $AWS_ACCESS_KEY
+                                aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+                                aws configure set region $AWS_REGION
+                                aws ecr-public get-login-password --region $AWS_REGION |  ssh ${EC2_USER}@${EC2_IP} 'docker login --username AWS --password-stdin public.ecr.aws/y1y3z0j6'
 
-                            # Pull the Docker image and run it on port 8081
-                            ssh ${EC2_USER}@${EC2_IP} '
+                                # Pull the Docker image and run it on port 8081
+                                ssh ${EC2_USER}@${EC2_IP} '
                                 docker pull public.ecr.aws/y1y3z0j6/${ECR_REPO_NAME}:${IMAGE_TAG} && \
                                 docker run -d -p 8081:8080 public.ecr.aws/y1y3z0j6/${ECR_REPO_NAME}:${IMAGE_TAG}
                             '
-                        """
+                            """
+                        }
                     }
                 }
             }
