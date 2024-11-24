@@ -81,7 +81,7 @@ pipeline {
                     sshagent(credentials: ['cloud-user']) {
                         sh """
                             # Stop and remove any container using port 8081
-                            ssh ${EC2_USER}@${EC2_IP} '
+                            ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} '
                                 container_id=\$(docker ps -q -f "publish=8081")
                                 if [ -n "\$container_id" ]; then
                                     echo "Stopping and removing container running on port 8081..."
@@ -92,7 +92,7 @@ pipeline {
                                 fi
                                 '
                                 # Pull the Docker image and run it on port 8081
-                                ssh ${EC2_USER}@${EC2_IP} '
+                                ssh -o StrictHostKeyChecking=no  ${EC2_USER}@${EC2_IP} '
                                 docker pull public.ecr.aws/y1y3z0j6/${ECR_REPO_NAME}:${IMAGE_TAG} && \
                                 docker run -d -p 8081:8080 \
                                 -e WEATHER_API_KEY=d2929e9483efc82c82c32ee7e02d563e \
