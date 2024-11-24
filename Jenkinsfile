@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools{
+        maven 'maven'
+    }
     environment {
         AWS_REGION = 'us-east-1'              
         ECR_REPO_NAME = 'weather/predictor'          
