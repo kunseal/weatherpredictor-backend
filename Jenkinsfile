@@ -97,7 +97,7 @@ pipeline {
                                 docker pull public.ecr.aws/y1y3z0j6/${ECR_REPO_NAME}:${IMAGE_TAG} && \
                                 docker run -d -p 8081:8080 \
                                 -e WEATHER_API_KEY=d2929e9483efc82c82c32ee7e02d563e \
-                                -e REDIS_KEY=5Ncxv9V4GqZ1bsBQLcGB2tgrpoANz0Ju 
+                                -e REDIS_KEY=5Ncxv9V4GqZ1bsBQLcGB2tgrpoANz0Ju \
                                 public.ecr.aws/y1y3z0j6/${ECR_REPO_NAME}:${IMAGE_TAG}
                             '
                             """
