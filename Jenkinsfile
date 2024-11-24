@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    tools{
-        maven 'maven'
-    }
     environment {
         AWS_REGION = 'us-east-1'              
         ECR_REPO_NAME = 'weather/predictor'          
@@ -54,11 +51,6 @@ pipeline {
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
                     ]) {
                         sh """
-                         # Export AWS credentials to environment variables
-                        export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY
-                        export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-                        export AWS_DEFAULT_REGION=$AWS_REGION
-
                         aws configure set aws_access_key_id $AWS_ACCESS_KEY
                         aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
                         aws configure set region $AWS_REGION
@@ -101,9 +93,8 @@ pipeline {
                                 ssh ${EC2_USER}@${EC2_IP} '
                                 docker pull public.ecr.aws/y1y3z0j6/${ECR_REPO_NAME}:${IMAGE_TAG} && \
                                 docker run -d -p 8081:8080 \
-                                -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY} \
-                                -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-                                -e AWS_DEFAULT_REGION=${AWS_REGION} \
+                                -e WEATHER_API_KEY=d2929e9483efc82c82c32ee7e02d563e \
+                                -e REDIS_KEY=5Ncxv9V4GqZ1bsBQLcGB2tgrpoANz0Ju 
                                 public.ecr.aws/y1y3z0j6/${ECR_REPO_NAME}:${IMAGE_TAG}
                             '
                             """
