@@ -4,7 +4,7 @@ spring:
   data:
     redis:
       host: redis-17969.c244.us-east-1-2.ec2.redns.redis-cloud.com
-      password: ${REDIS_KEY}
+      password: key
       ssl:
         enabled: true # Enable SSL if required
       timeout: 900 # expiry in sec
@@ -14,5 +14,5 @@ server:
   port: 8080
 weather:
   api:
-    key: ${WEATHER_API_KEY}
+    key: key
     url: https://api.openweathermap.org/data/2.5/forecast
