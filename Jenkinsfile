@@ -80,7 +80,6 @@ pipeline {
                 script {
                     sshagent(credentials: ['cloud-user']) {
                         sh """
-                            ssh-keyscan -H ${EC2_IP} >> ~/.ssh/known_hosts
                             # Stop and remove any container using port 8081
                             ssh ${EC2_USER}@${EC2_IP} '
                                 container_id=\$(docker ps -q -f "publish=8081")
