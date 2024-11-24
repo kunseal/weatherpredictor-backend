@@ -78,6 +78,10 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 script {
+                    withCredentials([
+                        string(credentialsId: 'WEATHER_API_KEY', variable: 'WEATHER_API_KEY'),
+                        string(credentialsId: 'REDIS_KEY', variable: 'REDIS_KEY')
+                    ]){
                     sshagent(credentials: ['cloud-user']) {
                         sh """
                             # Stop and remove any container using port 8081
@@ -92,16 +96,16 @@ pipeline {
                                 fi
                                 '
                                 # Pull the Docker image and run it on port 8081
-                                ssh -o StrictHostKeyChecking=no  ${EC2_USER}@${EC2_IP} '
+                                ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_IP} '
                                 docker pull public.ecr.aws/y1y3z0j6/${ECR_REPO_NAME}:${IMAGE_TAG} && \
                                 docker run -d -p 8081:8080 \
-                                -e WEATHER_API_KEY=d2929e9483efc82c82c32ee7e02d563e \
-                                -e REDIS_KEY=5Ncxv9V4GqZ1bsBQLcGB2tgrpoANz0Ju \
+                                -e WEATHER_API_KEY=${WEATHER_API_KEY} \
+                                -e REDIS_KEY=${REDIS_KEY} \
                                 public.ecr.aws/y1y3z0j6/${ECR_REPO_NAME}:${IMAGE_TAG}
                             '
                             """
                         }
-
+                    }
                 }
             }
         }
