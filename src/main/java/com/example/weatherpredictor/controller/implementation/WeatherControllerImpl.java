@@ -1,7 +1,7 @@
 package com.example.weatherpredictor.controller.implementation;
 
 import com.example.weatherpredictor.controller.WeatherController;
-import com.example.weatherpredictor.model.ErrorResponse;
+import com.example.weatherpredictor.dto.HttpClientErrorResponseBody;
 import com.example.weatherpredictor.model.WeatherResponse;
 import com.example.weatherpredictor.service.WeatherService;
 
@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,16 +32,16 @@ public class WeatherControllerImpl implements WeatherController {
     @Operation(summary = "Get weather details for a city")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved weather data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = WeatherResponse.class))),
-            @ApiResponse(responseCode = "404", description = "City not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class), examples = @ExampleObject(value = """
+            @ApiResponse(responseCode = "404", description = "City not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = HttpClientErrorResponseBody.class), examples = @ExampleObject(value = """
                     {
-                      "message": "City not found",
-                      "details": "The city you provided could not be found in our database."
+                      "cod": 404,
+                      "message": "City not found"
                     }
                     """))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class), examples = @ExampleObject(value = """
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = HttpClientErrorResponseBody.class), examples = @ExampleObject(value = """
                     {
+                      "cod": 500,
                       "message": "Internal server error",
-                      "details": "An unexpected error occurred. Please try again later."
                     }
                     """)))
     })

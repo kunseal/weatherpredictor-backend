@@ -1,7 +1,6 @@
 package com.example.weatherpredictor.exception;
 
 import com.example.weatherpredictor.dto.HttpClientErrorResponseBody;
-import com.example.weatherpredictor.model.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,13 +15,6 @@ import java.util.Arrays;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(WeatherServiceException.class)
-    public ResponseEntity<ErrorResponse> handleWeatherServiceException(WeatherServiceException ex) {
-        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Error fetching weather data");
-        log.error(Arrays.toString(ex.getStackTrace()));
-        return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
-    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -40,8 +32,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
-        ErrorResponse error = new ErrorResponse("Internal Server Error", ex.getMessage());
+    public ResponseEntity<HttpClientErrorResponseBody> handleGeneralException(Exception ex) {
+        HttpClientErrorResponseBody error = new HttpClientErrorResponseBody("500", "Internal Server Error");
         log.error("Error = " + ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
