@@ -27,28 +27,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WeatherControllerImpl implements WeatherController {
 
-    private final WeatherService weatherService;
+  private final WeatherService weatherService;
 
-    @Operation(summary = "Get weather details for a city")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved weather data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = WeatherResponse.class))),
-            @ApiResponse(responseCode = "404", description = "City not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = HttpClientErrorResponseBody.class), examples = @ExampleObject(value = """
-                    {
-                      "cod": 404,
-                      "message": "City not found"
-                    }
-                    """))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = HttpClientErrorResponseBody.class), examples = @ExampleObject(value = """
-                    {
-                      "cod": 500,
-                      "message": "Internal server error",
-                    }
-                    """)))
-    })
-    @GetMapping
-    public ResponseEntity<WeatherResponse> getWeatherForecast(String city) {
-        log.debug("WeatherController::getWeatherForecast");
-        WeatherResponse response = weatherService.getWeatherForecast(city);
-        return ResponseEntity.ok(response);
-    }
+  @Operation(summary = "Get weather details for a city")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successfully retrieved weather data", content = @Content(mediaType = "application/json", schema = @Schema(implementation = WeatherResponse.class))),
+      @ApiResponse(responseCode = "404", description = "City not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = HttpClientErrorResponseBody.class), examples = @ExampleObject(value = """
+          {
+            "cod": 404,
+            "message": "City not found"
+          }
+          """))),
+      @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = HttpClientErrorResponseBody.class), examples = @ExampleObject(value = """
+          {
+            "cod": 500,
+            "message": "Internal server error"
+          }
+          """)))
+  })
+  @GetMapping
+  public ResponseEntity<WeatherResponse> getWeatherForecast(String city) {
+    log.debug("WeatherController::getWeatherForecast");
+    WeatherResponse response = weatherService.getWeatherForecast(city);
+    return ResponseEntity.ok(response);
+  }
 }
